@@ -1,6 +1,5 @@
 #!/bin/bash
-# Set up Python env.
-# For Ubuntu/Debian only yet.
+# Set up development env.
 
 echo Start: set up Python environment.
 
