@@ -4,7 +4,7 @@
 echo Start: set up Python environment.
 
 devenv=briefer
-pkgs=( ipython )
+pkgs=(flake8 ipython ruamel.yaml)
 
 # Install edm
 # FIXME: implement

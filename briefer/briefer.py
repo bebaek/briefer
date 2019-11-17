@@ -1,5 +1,7 @@
 import smtplib
 
+from config import Config
+
 
 def send_mail():
     port = 1025
@@ -10,11 +12,14 @@ def send_mail():
 
     with smtplib.SMTP(smtp_server, port) as server:
         server.sendmail(sender_email, receiver_email, message)
-    
+
 
 def main():
-    """ Entry point """
-    send_mail()
+    """Entry point"""
+    cfg = Config()
+    cfg.load()
+    print(cfg.sender)
+    print(cfg.receiver)
 
 
 if __name__ == '__main__':
