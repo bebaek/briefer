@@ -1,5 +1,5 @@
+from getpass import getpass
 from pathlib import Path
-import sys
 
 import ruamel.yaml as yaml
 
@@ -12,18 +12,19 @@ class Config:
     def __init__(self):
         self.cfg_dir = DEFAULT_CFG_DIR
         self.cfg_file = DEFAULT_CFG_FILE
-        self.sender = {'address': None, 'password': None}
-        self.receiver = {'address': None, 'password': None}
+        self.smtp = {
+            'sender': None,
+            'password': None,
+            'receiver': None,
+            'server': 'smtp.gmail.com',
+            'port': 465,
+        }
 
     def load(self):
         with self.cfg_file.open(mode='r') as f:
-            contents = yaml.safe_load(f)
-        self.sender = contents['sender']
-        self.receiver = contents['receiver']
+            self.smtp = yaml.safe_load(f)
 
     def save(self):
-        contents = {'sender': self.sender, 'receiver': self.receiver}
-
         # Create config dir as needed
         self.cfg_dir.mkdir(mode=0o700, exist_ok=True)
 
@@ -32,7 +33,7 @@ class Config:
         if mode & 0o077:
             print(
                 f'Insecure ({mode & 0o07777:o}) config dir {self.cfg_dir}.')
-            sys.exit(1)
+            return
 
         # Write to config file
         try:
@@ -41,7 +42,7 @@ class Config:
             pass
         self.cfg_file.touch(mode=0o600)  # Contains secret
         with self.cfg_file.open(mode='w') as f:
-            yaml.dump(contents, f, default_flow_style=False)
+            yaml.dump(self.smtp, f, default_flow_style=False)
 
 
 def update_config_cli():
@@ -49,12 +50,17 @@ def update_config_cli():
     cfg = Config()
 
     # FIXME: Validate input formats
-    cfg.sender['address'] = input('Sender address? ')
-    cfg.sender['password'] = input('Sender password? ')
-    cfg.receiver['address'] = input('Receiver address? ')
-    cfg.receiver['password'] = input('Receiver password? ')
+    cfg.smtp['sender'] = input('Sender address? ')
+    cfg.smtp['password'] = getpass('Sender password? ')
+    cfg.smtp['receiver'] = input('Receiver address? ')
+    cfg.smtp['server'] = (
+        input(f'SMTP server address? [{cfg.smtp["server"]}] ').strip()
+        or cfg.smtp['server'])
+    cfg.smtp['port'] = (
+        input(f'SMTP port? [{cfg.smtp["port"]}] ').strip() or cfg.smtp['port'])
 
     cfg.save()
+    return cfg
 
 
 if __name__ == '__main__':
