@@ -1,10 +1,12 @@
 from getpass import getpass
 from pathlib import Path
+from string import capwords
 
 import ruamel.yaml as yaml
 
 DEFAULT_CFG_DIR = Path('~/.config/briefer').expanduser()
 DEFAULT_CFG_FILE = DEFAULT_CFG_DIR / Path('app_config.yaml')
+CFG_KEYS = ['sender', 'password', 'receiver', 'server', 'port', 'news api key']
 
 
 class Config:
@@ -12,17 +14,27 @@ class Config:
     def __init__(self):
         self.cfg_dir = DEFAULT_CFG_DIR
         self.cfg_file = DEFAULT_CFG_FILE
+
+        # App defaults
         self.smtp = {
-            'sender': None,
-            'password': None,
-            'receiver': None,
+            'sender': '',
+            'password': '',
+            'receiver': '',
             'server': 'smtp.gmail.com',
             'port': 465,
+            'news api key': '',
         }
+
+        # Update from existing config file
+        # FIXME: check required fields
+        try:
+            self.load()
+        except FileNotFoundError:
+            pass
 
     def load(self):
         with self.cfg_file.open(mode='r') as f:
-            self.smtp = yaml.safe_load(f)
+            self.smtp.update(yaml.safe_load(f))
 
     def save(self):
         # Create config dir as needed
@@ -49,15 +61,19 @@ def update_config_cli():
     """Get config from command line and write to a file"""
     cfg = Config()
 
-    # FIXME: Validate input formats
-    cfg.smtp['sender'] = input('Sender address? ')
-    cfg.smtp['password'] = getpass('Sender password? ')
-    cfg.smtp['receiver'] = input('Receiver address? ')
-    cfg.smtp['server'] = (
-        input(f'SMTP server address? [{cfg.smtp["server"]}] ').strip()
-        or cfg.smtp['server'])
-    cfg.smtp['port'] = (
-        input(f'SMTP port? [{cfg.smtp["port"]}] ').strip() or cfg.smtp['port'])
+    # FIXME: improve CLI experience
+    print('Note: Enter blank to make no change.')
+    for key in CFG_KEYS:
+        if key == 'password':
+            cfg.smtp[key] = (
+                getpass(f'{capwords(key, sep=". ")} [*]? ').strip()
+                or
+                cfg.smtp[key])
+        else:
+            cfg.smtp[key] = (
+                input(f'{capwords(key, sep=". ")} [{cfg.smtp[key]}]? ').strip()
+                or
+                cfg.smtp[key])
 
     cfg.save()
     return cfg
