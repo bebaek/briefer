@@ -1,10 +1,11 @@
+import argparse
 import requests
 import smtplib
 import ssl
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
-from config import Config, update_config_cli
+from .config import Config, update_config_cli
 
 
 def send_mail_local():
@@ -57,14 +58,15 @@ def get_news(api_key):
     return msg
 
 
-def main():
-    """Entry point"""
+def config():
+    """Run config command"""
+    update_config_cli()
+
+
+def send():
+    """Run send command"""
     # Get config
     cfg = Config()
-    try:
-        cfg.load()
-    except FileNotFoundError:
-        cfg = update_config_cli()
 
     # Prep message
     message = MIMEMultipart('alternative')
@@ -90,6 +92,20 @@ def main():
 
     # Send mail
     send_mail(message, **cfg.smtp)
+
+
+def main():
+    """Entry point"""
+    # Parse arguments
+    parser = argparse.ArgumentParser()
+    parser.add_argument('command', help='config or send')
+    args = parser.parse_args()
+
+    # Run command
+    if args.command == 'config':
+        config()
+    elif args.command == 'send':
+        send()
 
 
 if __name__ == '__main__':

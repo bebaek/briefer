@@ -62,18 +62,19 @@ def update_config_cli():
     cfg = Config()
 
     # FIXME: improve CLI experience
-    print('Note: Enter blank to make no change.')
+    print('Note: Enter blank to keep the current value.')
     for key in CFG_KEYS:
-        if key == 'password':
-            cfg.smtp[key] = (
-                getpass(f'{capwords(key, sep=". ")} [*]? ').strip()
-                or
-                cfg.smtp[key])
+        # Show (or hide) current value
+        if key in ['news api key', 'password']:
+            current = '*' if cfg.smtp[key] else ''
         else:
-            cfg.smtp[key] = (
-                input(f'{capwords(key, sep=". ")} [{cfg.smtp[key]}]? ').strip()
-                or
-                cfg.smtp[key])
+            current = cfg.smtp[key]
+
+        # Get input
+        cfg.smtp[key] = (
+            getpass(f'{capwords(key, sep=". ")} [{current}]? ').strip()
+            or
+            cfg.smtp[key])
 
     cfg.save()
     return cfg
