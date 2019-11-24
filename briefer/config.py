@@ -38,6 +38,7 @@ class Config:
 
     def save(self):
         # Create config dir as needed
+        self.cfg_dir.parent.mkdir(mode=0o700, exist_ok=True)
         self.cfg_dir.mkdir(mode=0o700, exist_ok=True)
 
         # Check dir mode
@@ -67,14 +68,16 @@ def update_config_cli():
         # Show (or hide) current value
         if key in ['news api key', 'password']:
             current = '*' if cfg.smtp[key] else ''
+            cfg.smtp[key] = (
+                getpass(f'{capwords(key, sep=". ")} [{current}]? ').strip()
+                or
+                cfg.smtp[key])
         else:
             current = cfg.smtp[key]
-
-        # Get input
-        cfg.smtp[key] = (
-            getpass(f'{capwords(key, sep=". ")} [{current}]? ').strip()
-            or
-            cfg.smtp[key])
+            cfg.smtp[key] = (
+                input(f'{capwords(key, sep=". ")} [{current}]? ').strip()
+                or
+                cfg.smtp[key])
 
     cfg.save()
     return cfg
