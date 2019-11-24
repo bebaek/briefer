@@ -3,6 +3,9 @@
 # Run in this directory:
 # >>> bash install.sh
 
+# pip puts the bin file here
+bin_path="$HOME/.local/bin"
+
 show_result () {
     echo
     if [ $stat -ne 0 ]; then
@@ -13,15 +16,21 @@ show_result () {
     fi
 }
 
-# Install this python package
-pip3 install .
+# (Re-)Install this python package
+pip3 install --force-reinstall .
 stat=$?
 kind="pip install"
 show_result
 
-# Register to cron
+# Configure app
+"$bin_path/briefer" config
+stat=$?
+kind="Config"
+show_result
+
+# Register to user cron
 # FIXME: make this configurable and changeable
-echo "$(crontab -l ; echo '0 6 * * * briefer send')" | crontab -
+echo "$(crontab -l ; echo 0 6 '* * *' $bin_path/briefer send)" | crontab -
 stat=$?
 kind="Registering to cron"
 show_result
