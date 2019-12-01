@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+  <body>
+
+    <p><b>News Headlines</b></p>
+    {% for title, url in news %}
+    <p><a href="{{url}}">{{title}}</a></p>
+    {% endfor %}
+    <p>Powered by <a href="https://newsapi.org">NewsAPI.org</a></p>
+    <br />
+    <p><b>Calendar Events</b></p>
+    <table>
+      <tr>
+        <th>Start</th>
+        <th>End</th>
+        <th>Summary</th>
+      </tr>
+      {% for e in events %}
+      <tr>
+        <td>{{e['start']}}</td>
+        <td>{{e['end']}}</td>
+        <td>{{e['summary']}}</td>
+      </tr>
+      {% endfor %}
+    </table>
+
+  </body>
+</html>

@@ -5,13 +5,18 @@ setup(
     version='0.0.0',
     python_requires='>3.6',
     packages=find_packages(),
+    package_data={
+        '': ['templates/*.html'],
+    },
     install_requires=[
+        'jinja2',
+        'pytz',
         'requests',
         'ruamel.yaml',
     ],
     entry_points={
         'console_scripts': [
-            'briefer = briefer.briefer:main',
+            'briefer = briefer.main:main',
         ],
     },
 )
