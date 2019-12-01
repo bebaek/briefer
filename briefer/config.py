@@ -6,7 +6,22 @@ import ruamel.yaml as yaml
 
 DEFAULT_CFG_DIR = Path('~/.config/briefer').expanduser()
 DEFAULT_CFG_FILE = DEFAULT_CFG_DIR / Path('app_config.yaml')
-CFG_KEYS = ['sender', 'password', 'receiver', 'server', 'port', 'news api key']
+CFG_KEYS = [
+    # SMTP
+    'sender',
+    'password',
+    'receiver',
+    'server',
+    'port',
+
+    # News API
+    'news api key',
+
+    # Google calendar
+    'calendar client ID',
+    'calendar client secret',
+    'calendar refresh token',
+]
 
 
 class Config:
@@ -16,14 +31,12 @@ class Config:
         self.cfg_file = DEFAULT_CFG_FILE
 
         # App defaults
-        self.smtp = {
-            'sender': '',
-            'password': '',
-            'receiver': '',
-            'server': 'smtp.gmail.com',
-            'port': 465,
-            'news api key': '',
-        }
+        # FIXME: rename or reorganize config variable
+        self.smtp = {}
+        for key in CFG_KEYS:
+            self.smtp[key] = ''
+        self.smtp['server'] = 'smtp.gmail.com'
+        self.smtp['port'] = 465
 
         # Update from existing config file
         # FIXME: check required fields

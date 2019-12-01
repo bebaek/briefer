@@ -6,6 +6,7 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
 from briefer.config import Config, update_config_cli
+from briefer.calendar_access import get_calendar_events
 
 
 def send_mail_local():
@@ -84,6 +85,9 @@ def send():
 
     # Get news
     content += get_news(cfg.smtp['news api key'])
+
+    # Get calendar
+    content += get_calendar_events()
 
     # Complete message
     html_str = html_tmpl.format(content=content)
