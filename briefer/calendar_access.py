@@ -1,10 +1,8 @@
-import requests
 from datetime import datetime, timedelta
-from requests.utils import quote
 
 import pytz
-
-from briefer.config import Config
+import requests
+from requests.utils import quote
 
 
 def get_new_access_token(client_id, client_secret, refresh_token):
@@ -37,15 +35,14 @@ def get_calendar_list(access_token):
     return calendar_ids, tz
 
 
-def get_calendar_events():
+def get_calendar_events(config):
     """Return today's calendar events."""
-    cfg = Config()
 
     # Get new access token
     access_token = get_new_access_token(
-        cfg.smtp['calendar client ID'],
-        cfg.smtp['calendar client secret'],
-        cfg.smtp['calendar refresh token'],
+        config.smtp['calendar client ID'],
+        config.smtp['calendar client secret'],
+        config.smtp['calendar refresh token'],
     )
 
     # Get calendar IDs
@@ -56,22 +53,20 @@ def get_calendar_events():
     for id_ in calendar_ids:
         events[id_] = _get_events(access_token, id_, tz)
 
-    return _events_to_html(events)
+    return _events_to_list(events)
 
 
 def _get_events(access_token, id_, tz):
     """Return events from a single calendar."""
-    CAL_KEYS = ['start', 'end', 'summary']
-
     # Filter with current datetime
     lo_dt = datetime.now(pytz.timezone(tz))
-    hi_dt = lo_dt + timedelta(days=30)
+    hi_dt = lo_dt + timedelta(hours=48)
 
     response = requests.get(
         'https://www.googleapis.com/calendar/v3/calendars/{}/events'.format(
             quote(id_)),
         params={
-            'maxResults': 5,
+            'maxResults': 25,
             'timeMin': lo_dt.isoformat(),
             'timeMax': hi_dt.isoformat()},
         headers={'Authorization': f'Bearer {access_token}'},
@@ -80,21 +75,34 @@ def _get_events(access_token, id_, tz):
 
     res_list = []
     for item in response.json()['items']:
-        res_dict = {}
-        for key in CAL_KEYS:
-            res_dict[key] = item[key]
+        try:
+            res_dict = {
+                'start': item['start']['dateTime'],
+                'end': item['end']['dateTime'],
+                'summary': item['summary'],
+            }
+        except KeyError:
+            res_dict = {
+                'start': item['start']['date'],
+                'end': item['end']['date'],
+                'summary': item['summary'],
+            }
         res_list += [res_dict]
     return res_list
 
 
-def _events_to_html(events):
-    """Convert calendar event dictionary to string for html doc."""
-    # FIXME: improve
-    msg = '<p><b>Calendars</b></p>\n\n'
-    msg += f'<p>{str(events)}<p>\n\n'
-    return msg
+def _events_to_list(events):
+    """Convert calendar event dictionary to chronologically-ordered list."""
+    res = []
+    for val in events.values():
+        res.extend(val)
+    res.sort(key=lambda x: x['start'])
+    return res
 
 
 if __name__ == '__main__':
-    html = get_calendar_events()
-    print(html)
+    from briefer.config import Config
+
+    cfg = Config()
+    res = get_calendar_events(cfg)
+    print(res)

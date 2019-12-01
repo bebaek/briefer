@@ -12,12 +12,5 @@ def get_news(api_key):
         titles += [news['title']]
         urls += [news['url']]
 
-    # Compose HTML content
-    msg = '<p><b>News Headlines</p>\n\n'
-    for title, url in zip(titles, urls):
-        msg += f'<p><a href="{url}">{title}</a></p>\n'
-
-    # Add attribution:
-    msg += (
-        '<p>Powered by <a href="https://newsapi.org">NewsAPI.org</a></p>\n\n')
-    return msg
+    # Return new contents
+    return titles, urls
