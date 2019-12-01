@@ -5,7 +5,9 @@ setup(
     version='0.0.0',
     python_requires='>3.6',
     packages=find_packages(),
-    include_package_data=True,
+    package_data={
+        '': ['templates/*.html'],
+    },
     install_requires=[
         'jinja2',
         'pytz',
