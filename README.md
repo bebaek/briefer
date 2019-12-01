@@ -1,7 +1,9 @@
 # briefer
-Send personalized briefing email daily. Collect repetitive checklists and
-see them in your single email message. Currently, the email contents are created
-from news highlights and google calendar events.
+Send a personal briefing email daily from a 24/7 Linux server. Collect
+repetitive checklists and see them in a single HTML email message.
+
+It is under early development. Currently, the email contents are created from
+NewsAPI and Google Calendar events.
 
 ## Installation
 
@@ -38,7 +40,7 @@ account too.
 Get a NewsAPI key from [NewsAPI](https://newsapi.org).
 
 (To be expanded.)
-Get a google calendar account and authorize this app for the API access. Refer
+Get a Google Calendar account and authorize this app for the API access. Refer
 to [reference 1](https://developers.google.com/calendar/auth) and
 [reference 2](https://developers.google.com/identity/sign-in/devices).
 Set the scope to `https://www.googleapis.com/auth/calendar.readonly`.
