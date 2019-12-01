@@ -67,6 +67,7 @@ def _get_events(access_token, id_, tz):
             quote(id_)),
         params={
             'maxResults': 25,
+            'singleEvents': True,
             'timeMin': lo_dt.isoformat(),
             'timeMax': hi_dt.isoformat()},
         headers={'Authorization': f'Bearer {access_token}'},
