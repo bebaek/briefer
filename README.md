@@ -65,7 +65,7 @@ Run setup script.
 ### Running the app
 
 Prerequisites: sender/receiver email accounts for SMTP use, API key from
-[NewsAPI](https://newsapi.org), google calendar account and API access
+[NewsAPI](https://newsapi.org), Google Calendar account and API access
 
 Activate the dev environment:
 
