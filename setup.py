@@ -5,7 +5,10 @@ setup(
     version='0.0.0',
     python_requires='>3.6',
     packages=find_packages(),
+    include_package_data=True,
     install_requires=[
+        'jinja2',
+        'pytz',
         'requests',
         'ruamel.yaml',
     ],
