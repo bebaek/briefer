@@ -5,7 +5,7 @@ import ssl
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
-from .config import Config, update_config_cli
+from briefer.config import Config, update_config_cli
 
 
 def send_mail_local():

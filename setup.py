@@ -11,7 +11,7 @@ setup(
     ],
     entry_points={
         'console_scripts': [
-            'briefer = briefer.briefer:main',
+            'briefer = briefer.main:main',
         ],
     },
 )
