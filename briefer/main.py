@@ -1,5 +1,4 @@
 import argparse
-import requests
 import smtplib
 import ssl
 from email.mime.text import MIMEText
@@ -7,6 +6,7 @@ from email.mime.multipart import MIMEMultipart
 
 from briefer.config import Config, update_config_cli
 from briefer.calendar_access import get_calendar_events
+from briefer.news_access import get_news
 
 
 def send_mail_local():
@@ -35,28 +35,6 @@ def send_mail(message, **kwargs):
         server.login(kwargs['sender'], kwargs['password'])
         server.sendmail(
             kwargs['sender'], kwargs['receiver'], message.as_string())
-
-
-def get_news(api_key):
-    """Return news headline string"""
-    url = f'https://newsapi.org/v2/top-headlines?country=us&apikey={api_key}'
-    response = requests.get(url).json()
-    selected_news = response['articles'][:3]
-    titles = []
-    urls = []
-    for news in selected_news:
-        titles += [news['title']]
-        urls += [news['url']]
-
-    # Compose HTML content
-    msg = '<p><b>News Headlines</p>\n\n'
-    for title, url in zip(titles, urls):
-        msg += f'<p><a href="{url}">{title}</a></p>\n'
-
-    # Add attribution:
-    msg += (
-        '<p>Powered by <a href="https://newsapi.org">NewsAPI.org</a></p>\n\n')
-    return msg
 
 
 def config():
