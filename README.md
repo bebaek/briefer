@@ -2,7 +2,7 @@
 Send a personal briefing email daily from a 24/7 Linux server. Collect
 repetitive checklists and see them in a single HTML email message.
 
-It is under early development. Currently, the email contents are created from
+It is in early development. Currently, the email contents are created from
 NewsAPI and Google Calendar events.
 
 ## Installation
@@ -16,7 +16,8 @@ Download the repo.
 
 In the cloned directory, run the CLI installation script. This installs this
 package with pip3, creates a configuration file, and registers to the users
-crontab. (Run `crontab -e` to further modify your crontab.)
+crontab. (Run `crontab -e` to further modify your crontab.) This can also be
+used to upgrade/reinstall the package.
 
     bash install.sh
 
@@ -31,6 +32,16 @@ See the usage of the main command:
 Test-send an email:
 
     briefer send
+
+## Uninstalling
+
+Uninstall the Python package:
+
+    pip uninstall briefer
+
+Remove the config directory:
+
+    rm -rf ~/.config/briefer
 
 ## Set up external APIs
 
