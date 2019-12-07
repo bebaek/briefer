@@ -98,6 +98,12 @@ def _events_to_list(events):
     for val in events.values():
         res.extend(val)
     res.sort(key=lambda x: x['start'])
+
+    # FIXME: Use more human-friendly format.
+    # Replace datetime separator T with a space
+    for item in res:
+        item['start'] = item['start'].replace('T', ' ')
+        item['end'] = item['end'].replace('T', ' ')
     return res
 
 
