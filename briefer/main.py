@@ -43,6 +43,7 @@ def config():
 
 def send():
     """Run send command"""
+
     # Get config
     cfg = Config()
 
@@ -63,11 +64,29 @@ def send():
     send_mail(message, **cfg.smtp)
 
 
+def show_html():
+    """Run show-html command"""
+    import subprocess
+    from tempfile import NamedTemporaryFile
+
+    # Get config
+    cfg = Config()
+
+    # Get contents
+    html_str = get_html_part(cfg)
+
+    # Save to a tempfile and render
+    with NamedTemporaryFile('w', delete=False, suffix='.html') as f:
+        f.write(html_str)
+    subprocess.run(['w3m', f.name])
+
+
 def main():
     """Entry point"""
+
     # Parse arguments
     parser = argparse.ArgumentParser()
-    parser.add_argument('command', help='config or send')
+    parser.add_argument('command', help='config, send, or show-html')
     args = parser.parse_args()
 
     # Run command
@@ -75,6 +94,8 @@ def main():
         config()
     elif args.command == 'send':
         send()
+    elif args.command == 'show-html':
+        show_html()
 
 
 if __name__ == '__main__':

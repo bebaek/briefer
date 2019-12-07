@@ -86,10 +86,14 @@ Check the usage and also if it runs:
 
     briefer -h
 
-First, set up the configs:
+Configure first:
 
     briefer config
 
-Then, run send out an email:
+Check the composed HTML content (requires w3m):
+
+    briefer show-html
+
+Send out an email:
 
     briefer send
