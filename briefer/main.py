@@ -64,8 +64,8 @@ def send():
     send_mail(message, **cfg.smtp)
 
 
-def show_html():
-    """Run show-html command"""
+def html():
+    """Run html command"""
     import subprocess
     from tempfile import NamedTemporaryFile
 
@@ -86,7 +86,7 @@ def main():
 
     # Parse arguments
     parser = argparse.ArgumentParser()
-    parser.add_argument('command', help='config, send, or show-html')
+    parser.add_argument('command', help='config, send, or html')
     args = parser.parse_args()
 
     # Run command
@@ -94,8 +94,8 @@ def main():
         config()
     elif args.command == 'send':
         send()
-    elif args.command == 'show-html':
-        show_html()
+    elif args.command == 'html':
+        html()
 
 
 if __name__ == '__main__':

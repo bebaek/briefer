@@ -17,8 +17,8 @@
     {% if events %}
     {% for e in events %}
     <p>
-      From {{ e['start'] }}<br />
-      To {{ e['end'] }}<br />
+      {{ e['start'] }}<br />
+      (till {{ e['end'] }})<br />
       {{ e['summary'] }}
     </p>
     {% endfor %}
