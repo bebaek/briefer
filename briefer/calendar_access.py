@@ -1,12 +1,24 @@
+import re
 from datetime import datetime, timedelta
 
 import pytz
 import requests
 from requests.utils import quote
 
+# datetime formats
+D_R_FMT = '%Y-%m-%d'
+DT_R_FMT = '%Y-%m-%dT%H:%M:%S%z'
+D_O_FMT = '%a %b %d, %Y'
+DT_O_FMT = '%a %b %d %H:%M, %Y %Z'
+
+# date/datetime patterns from the calendar API
+p_date = re.compile(r'\d\d\d\d-\d\d-\d\d')
+p_datetime = re.compile(r'\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\d[+-]\d\d:\d\d')
+
 
 def get_new_access_token(client_id, client_secret, refresh_token):
     """Use long-lived refresh token to get short-lived access token."""
+
     response = requests.post(
         'https://www.googleapis.com/oauth2/v4/token',
         data={
@@ -23,6 +35,7 @@ def get_new_access_token(client_id, client_secret, refresh_token):
 
 def get_calendar_list(access_token):
     """Get all subscribed calendar IDs."""
+
     response = requests.get(
         'https://www.googleapis.com/calendar/v3/users/me/calendarList',
         headers={'Authorization': f'Bearer {access_token}'},
@@ -58,6 +71,7 @@ def get_calendar_events(config):
 
 def _get_events(access_token, id_, tz):
     """Return events from a single calendar."""
+
     # Filter with current datetime
     lo_dt = datetime.now(pytz.timezone(tz))
     hi_dt = lo_dt + timedelta(hours=48)
@@ -94,17 +108,41 @@ def _get_events(access_token, id_, tz):
 
 def _events_to_list(events):
     """Convert calendar event dictionary to chronologically-ordered list."""
+
     res = []
     for val in events.values():
         res.extend(val)
     res.sort(key=lambda x: x['start'])
 
-    # FIXME: Use more human-friendly format.
-    # Replace datetime separator T with a space
+    # Use human-friendly formats for date and datetime
     for item in res:
-        item['start'] = item['start'].replace('T', ' ')
-        item['end'] = item['end'].replace('T', ' ')
+        try:
+            item['start'] = _human_friendly_date(item['start'])
+            item['end'] = _human_friendly_date(item['end'])
+        except ValueError:
+            item['start'] = _human_friendly_datetime(item['start'])
+            item['end'] = _human_friendly_datetime(item['end'])
+
     return res
+
+
+def _human_friendly_date(s):
+    # Check the date format
+    if not p_date.match(s):
+        raise ValueError(f'Unexpected date string format: {s}')
+
+    return datetime.strptime(s, D_R_FMT).strftime(D_O_FMT)
+
+
+def _human_friendly_datetime(s):
+    # Check the datetime format
+    if not p_datetime.match(s):
+        raise ValueError(f'Unexpected datetime string format: {s}')
+
+    # Change timezone part from HH:MM to HHMM
+    res = s[:-3] + s[-2:]
+
+    return datetime.strptime(res, DT_R_FMT).strftime(DT_O_FMT)
 
 
 if __name__ == '__main__':
