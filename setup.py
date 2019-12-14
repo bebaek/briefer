@@ -13,6 +13,7 @@ setup(
         'pytz',
         'requests',
         'ruamel.yaml',
+        'tzlocal',
     ],
     entry_points={
         'console_scripts': [

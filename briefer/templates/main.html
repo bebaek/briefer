@@ -2,10 +2,12 @@
 <html>
   <body>
 
+    <h2>{{ today }}</h2>
+
     <h2>News Headlines</h2>
 
     {% for title, url in news %}
-    <p><a href="{{url}}">{{title}}</a></p>
+    <p><a href="{{ url }}">{{ title }}</a></p>
     {% endfor %}
 
     <p>Powered by <a href="https://newsapi.org">NewsAPI.org</a></p>
@@ -15,9 +17,9 @@
     {% if events %}
     {% for e in events %}
     <p>
-      From {{e['start']}}<br />
-      To {{e['end']}}<br />
-      {{e['summary']}}
+      From {{ e['start'] }}<br />
+      To {{ e['end'] }}<br />
+      {{ e['summary'] }}
     </p>
     {% endfor %}
     {% else %}
