@@ -9,6 +9,7 @@ setup(
         '': ['templates/*.html'],
     },
     install_requires=[
+        'cryptography',
         'jinja2',
         'pytz',
         'requests',
