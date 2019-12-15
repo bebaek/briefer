@@ -1,8 +1,10 @@
 from setuptools import find_packages, setup
 
+from briefer.version import VERSION
+
 setup(
     name='briefer',
-    version='0.0.0',
+    version=VERSION,
     python_requires='>3.6',
     packages=find_packages(),
     package_data={

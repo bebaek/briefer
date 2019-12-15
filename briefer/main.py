@@ -94,12 +94,21 @@ def html():
     webbrowser.open(pathname2url(f.name))
 
 
+def show_version():
+    """Run --version option."""
+    from briefer.version import VERSION
+
+    print(VERSION)
+
+
 def main():
     """Entry point"""
 
     # Parse arguments
     parser = argparse.ArgumentParser()
-    parser.add_argument('command', help='config, send, or html')
+    parser.add_argument(
+        'command', help='config, html, or send', nargs='?', default='help')
+    parser.add_argument('--version', help='Show version', action='store_true')
     args = parser.parse_args()
 
     # Run command
@@ -109,6 +118,10 @@ def main():
         send()
     elif args.command == 'html':
         html()
+    elif args.version:
+        show_version()
+    else:
+        parser.print_help()
 
 
 if __name__ == '__main__':
