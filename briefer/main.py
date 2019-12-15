@@ -1,8 +1,11 @@
 import argparse
 import smtplib
 import ssl
+from datetime import datetime
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+
+from tzlocal import get_localzone
 
 from briefer.config import Config, update_config_cli
 from briefer.content_view import get_html_part
@@ -49,7 +52,8 @@ def send():
 
     # Prep message
     message = MIMEMultipart('alternative')
-    message['Subject'] = 'Daily briefing by Briefer'
+    today = datetime.now(get_localzone()).strftime('%a %b %d, %Y')
+    message['Subject'] = f'{today}: Daily briefing by Briefer'
     message['From'] = cfg.smtp['sender']
     message['To'] = cfg.smtp['receiver']
 

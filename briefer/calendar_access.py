@@ -9,7 +9,7 @@ from requests.utils import quote
 D_R_FMT = '%Y-%m-%d'
 DT_R_FMT = '%Y-%m-%dT%H:%M:%S%z'
 D_O_FMT = '%a %b %d, %Y'
-DT_O_FMT = '%a %b %d %H:%M, %Y %Z'
+DT_O_FMT = '%a %b %d %I:%M %p, %Y %Z'
 
 # date/datetime patterns from the calendar API
 p_date = re.compile(r'\d\d\d\d-\d\d-\d\d')
