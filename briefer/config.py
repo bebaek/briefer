@@ -17,6 +17,10 @@ CFG_KEYS = [
     'server',
     'port',
 
+    # Location for weather forecasts. Use signed floats.
+    'longitude',
+    'latitude',
+
     # News API
     'news api key',
 

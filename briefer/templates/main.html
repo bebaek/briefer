@@ -4,6 +4,16 @@
 
     <h2>{{ today }}</h2>
 
+    <h2>Weather Forecasts</h2>
+
+    <p>{{ weather['name'] }}</p>
+
+    {% for w in weather['forecasts'] %}
+    <p>
+      <b>{{ w['name'] }}</b>: {{ w['detailedForecast'] }}
+    </p>
+    {% endfor %}
+
     <h2>Calendar Events</h2>
 
     {% if events %}
