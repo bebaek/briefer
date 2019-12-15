@@ -21,6 +21,11 @@ used to upgrade/reinstall the package.
 
     bash install.sh
 
+The required `cryptography` package may not be installed at first on certain
+platforms (e.g. 32-bit Linux). See
+[Cryptography](https://cryptography.io/en/latest/installation/) for further
+details.
+
 See the usage of the main command:
 
     briefer -h
