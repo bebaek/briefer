@@ -1,8 +1,11 @@
 import argparse
 import smtplib
 import ssl
+from datetime import datetime
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+
+from tzlocal import get_localzone
 
 from briefer.config import Config, update_config_cli
 from briefer.content_view import get_html_part
@@ -37,19 +40,20 @@ def send_mail(message, **kwargs):
 
 
 def config():
-    """Run config command"""
+    """Run config command. Make configuration changes and save them."""
     update_config_cli()
 
 
 def send():
-    """Run send command"""
+    """Run send command. Compose and send an email."""
 
     # Get config
     cfg = Config()
 
     # Prep message
     message = MIMEMultipart('alternative')
-    message['Subject'] = 'Daily briefing by Briefer'
+    today = datetime.now(get_localzone()).strftime('%a %b %d, %Y')
+    message['Subject'] = f'{today}: Daily briefing by Briefer'
     message['From'] = cfg.smtp['sender']
     message['To'] = cfg.smtp['receiver']
 
@@ -65,9 +69,10 @@ def send():
 
 
 def html():
-    """Run html command"""
-    import subprocess
+    """Run html command. Compose and show HTML message to send."""
+    import os
     from tempfile import NamedTemporaryFile
+    from urllib.request import pathname2url
 
     # Get config
     cfg = Config()
@@ -75,10 +80,18 @@ def html():
     # Get contents
     html_str = get_html_part(cfg)
 
-    # Save to a tempfile and render
+    # Save to a tempfile to render
     with NamedTemporaryFile('w', delete=False, suffix='.html') as f:
         f.write(html_str)
-    subprocess.run(['w3m', f.name])
+
+    # Use BROWSER environment variable for browser preference
+    if 'BROWSER' not in os.environ:
+        os.environ['BROWSER'] = f'firefox{os.pathsep}w3m'
+
+    # Somehow webbrowser should be imported after the env variable is set.
+    # Otherwise, 'firefox:w3m' doesn't get parsed correctly.
+    import webbrowser
+    webbrowser.open(pathname2url(f.name))
 
 
 def main():

@@ -19,7 +19,7 @@ def get_html_part(config):
     template = env.get_template('main.html')
 
     # Get today
-    today = datetime.now(get_localzone()).strftime('%c %Z')
+    today = datetime.now(get_localzone()).strftime('%a %b %d %I:%M %p, %Y %Z')
 
     # Get weather forecasts
     weather = get_weather((config.smtp['longitude'], config.smtp['latitude']))
