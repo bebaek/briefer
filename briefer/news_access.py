@@ -3,6 +3,7 @@ import requests
 
 def get_news(api_key):
     """Return news headline string"""
+
     url = f'https://newsapi.org/v2/top-headlines?country=us&apikey={api_key}'
     response = requests.get(url).json()
     selected_news = response['articles'][:3]
