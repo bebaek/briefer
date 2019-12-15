@@ -3,7 +3,7 @@ Send a personal briefing email daily from a 24/7 Linux server. Collect
 repetitive checklists and see them in a single HTML email message.
 
 It is in early development. Currently, the email contents are created from
-NewsAPI and Google Calendar events.
+National Weather Service, NewsAPI and Google Calendar events.
 
 ## Installation
 
