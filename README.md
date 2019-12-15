@@ -97,7 +97,7 @@ Configure first:
 
 Check the composed HTML content (requires w3m):
 
-    briefer show-html
+    briefer html
 
 Send out an email:
 
