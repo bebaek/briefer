@@ -18,7 +18,7 @@ In the cloned directory, run the CLI installation script. This installs this
 package with pip3, creates a configuration file, and registers to the users
 crontab. (Run `crontab -e` to further modify your crontab.) This can also be
 used to upgrade/reinstall the package. Cancel configuring steps by pressing
-ctrl-C if a package upgrade is all that is needed.
+ctrl-c if a package upgrade is all that is needed.
 
     bash install.sh
 
