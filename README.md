@@ -17,7 +17,8 @@ Download the repo.
 In the cloned directory, run the CLI installation script. This installs this
 package with pip3, creates a configuration file, and registers to the users
 crontab. (Run `crontab -e` to further modify your crontab.) This can also be
-used to upgrade/reinstall the package.
+used to upgrade/reinstall the package. Cancel configuring steps by pressing
+ctrl-C if a package upgrade is all that is needed.
 
     bash install.sh
 
@@ -33,6 +34,10 @@ See the usage of the main command:
 (Re-)configure:
 
     briefer config
+
+Check the HTML content composition:
+
+    briefer html
 
 Test-send an email:
 
@@ -90,15 +95,3 @@ Activate the dev environment:
 Check the usage and also if it runs:
 
     briefer -h
-
-Configure first:
-
-    briefer config
-
-Check the composed HTML content (requires w3m):
-
-    briefer html
-
-Send out an email:
-
-    briefer send
