@@ -2,6 +2,7 @@
 
 import requests
 
+TIMEOUT = 10
 user_agent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.47 Safari/537.36'  # noqa
 headers = {'User-Agent': user_agent}
 
@@ -28,7 +29,7 @@ def get_weather(coordinates):
     # First, access with coordinates
     # FIXME: format
     url = f'https://api.weather.gov/points/{lon},{lat}'
-    response = requests.get(url, headers=headers).json()
+    response = requests.get(url, headers=headers, timeout=TIMEOUT).json()
 
     # Get location zone
     loc = response['properties']['relativeLocation']['properties']
@@ -36,7 +37,7 @@ def get_weather(coordinates):
 
     # Second, access the linked forecast endpoint.
     url = response['properties']['forecast']
-    response = requests.get(url, headers=headers).json()
+    response = requests.get(url, headers=headers, timeout=TIMEOUT).json()
 
     # Get some periods
     periods = response['properties']['periods']

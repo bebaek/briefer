@@ -1,6 +1,7 @@
 from datetime import datetime
 
 from jinja2 import Environment, PackageLoader, select_autoescape
+from requests import Timeout
 from tzlocal import get_localzone
 
 from briefer.calendar_access import get_calendar_events
@@ -22,20 +23,30 @@ def get_html_part(config):
     today = datetime.now(get_localzone()).strftime('%a %b %d %I:%M %p, %Y %Z')
 
     # Get weather forecasts
-    weather = get_weather((config.smtp['longitude'], config.smtp['latitude']))
+    try:
+        weather = get_weather(
+            (config.smtp['longitude'], config.smtp['latitude']))
+    except Timeout:
+        weather = None
 
     # Get calendar events
-    events = get_calendar_events(config)
+    try:
+        events = get_calendar_events(config)
+    except Timeout:
+        events = None
 
     # Get news headlines
-    titles, urls = get_news(config.smtp['news api key'])
+    try:
+        titles, urls = get_news(config.smtp['news api key'])
+    except Timeout:
+        titles, urls = [None], [None]
 
     # Render
     html = template.render(
         today=today,
         weather=weather,
-        news=zip(titles, urls),
         events=events,
+        news=zip(titles, urls),
     )
     return html
 

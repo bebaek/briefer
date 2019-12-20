@@ -5,6 +5,8 @@ import pytz
 import requests
 from requests.utils import quote
 
+TIMEOUT = 10
+
 # datetime formats
 D_R_FMT = '%Y-%m-%d'
 DT_R_FMT = '%Y-%m-%dT%H:%M:%S%z'
@@ -26,7 +28,8 @@ def get_new_access_token(client_id, client_secret, refresh_token):
             'client_secret': client_secret,
             'refresh_token': refresh_token,
             'grant_type': 'refresh_token',
-        }
+        },
+        timeout=TIMEOUT,
     )
     response.raise_for_status()
     access_token = response.json()['access_token']
@@ -39,6 +42,7 @@ def get_calendar_list(access_token):
     response = requests.get(
         'https://www.googleapis.com/calendar/v3/users/me/calendarList',
         headers={'Authorization': f'Bearer {access_token}'},
+        timeout=TIMEOUT,
     )
     response.raise_for_status()
 
@@ -85,6 +89,7 @@ def _get_events(access_token, id_, tz):
             'timeMin': lo_dt.isoformat(),
             'timeMax': hi_dt.isoformat()},
         headers={'Authorization': f'Bearer {access_token}'},
+        timeout=TIMEOUT,
     )
     response.raise_for_status()
 
