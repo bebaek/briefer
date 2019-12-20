@@ -6,33 +6,45 @@
 
     <h2>Weather Forecasts</h2>
 
-    <p>{{ weather['location'] }}</p>
+    {% if weather is none %}
+      <p>Connection timed out.</p>
+    {% else %}
+      <p>{{ weather['location'] }}</p>
 
-    {% for w in weather['forecasts'] %}
-    <p>
-      <b>{{ w['name'] }}</b>: {{ w['detailedForecast'] }}
-    </p>
-    {% endfor %}
+      {% for w in weather['forecasts'] %}
+        <p>
+          <b>{{ w['name'] }}</b>: {{ w['detailedForecast'] }}
+        </p>
+      {% endfor %}
+    {% endif %}
 
     <h2>Calendar Events</h2>
 
-    {% if events %}
-    {% for e in events %}
-    <p>
-      {{ e['start'] }}<br />
-      (till {{ e['end'] }})<br />
-      <b>{{ e['summary'] }}</b>
-    </p>
-    {% endfor %}
+    {% if events is none %}
+      <p>Connection timed out.</p>
     {% else %}
-    <li>No event to show</li>
+      {% if events %}
+        {% for e in events %}
+          <p>
+            {{ e['start'] }}<br />
+            (till {{ e['end'] }})<br />
+            <b>{{ e['summary'] }}</b>
+          </p>
+        {% endfor %}
+      {% else %}
+        <li>No event to show</li>
+      {% endif %}
     {% endif %}
 
     <h2>News Headlines</h2>
 
-    {% for title, url in news %}
-    <p><a href="{{ url }}">{{ title }}</a></p>
-    {% endfor %}
+    {% if news is none %}
+      <p>Connection timed out.</p>
+    {% else %}
+      {% for title, url in news %}
+        <p><a href="{{ url }}">{{ title }}</a></p>
+      {% endfor %}
+    {% endif %}
 
     <p>Powered by <a href="https://newsapi.org">NewsAPI.org</a></p>
 
