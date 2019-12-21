@@ -7,7 +7,7 @@
     <h2>Weather Forecasts</h2>
 
     {% if weather is none %}
-      <p>Connection timed out.</p>
+      <p>Data are currently unavailable.</p>
     {% else %}
       <p>{{ weather['location'] }}</p>
 
@@ -21,7 +21,7 @@
     <h2>Calendar Events</h2>
 
     {% if events is none %}
-      <p>Connection timed out.</p>
+      <p>Data are currently unavailable.</p>
     {% else %}
       {% if events %}
         {% for e in events %}
@@ -32,14 +32,14 @@
           </p>
         {% endfor %}
       {% else %}
-        <li>No event to show</li>
+        <p>No event to show</p>
       {% endif %}
     {% endif %}
 
     <h2>News Headlines</h2>
 
     {% if news is none %}
-      <p>Connection timed out.</p>
+      <p>Data are currently unavailable.</p>
     {% else %}
       {% for title, url in news %}
         <p><a href="{{ url }}">{{ title }}</a></p>

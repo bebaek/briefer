@@ -1,10 +1,15 @@
 """Weather access"""
 
+import logging
 import requests
+
+from briefer.exceptions import ExternalAPIError
 
 TIMEOUT = 10
 user_agent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.47 Safari/537.36'  # noqa
 headers = {'User-Agent': user_agent}
+
+logger = logging.getLogger(__name__)
 
 
 def get_weather(coordinates):
@@ -40,7 +45,12 @@ def get_weather(coordinates):
     response = requests.get(url, headers=headers, timeout=TIMEOUT).json()
 
     # Get some periods
-    periods = response['properties']['periods']
+    try:
+        periods = response['properties']['periods']
+    except KeyError as e:
+        logger.warning(f'Unexpected weather API response:\n{response}')
+        raise ExternalAPIError(f'{e} + \nresponse: {response}')
+
     res['forecasts'] = []
     for i in range(4):
         res['forecasts'] += [periods[i]]
