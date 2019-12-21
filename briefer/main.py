@@ -1,14 +1,18 @@
 import argparse
+import logging
 import smtplib
 import ssl
 from datetime import datetime
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+from pathlib import Path
 
 from tzlocal import get_localzone
 
-from briefer.config import Config, update_config_cli
+from briefer.config import CFG_DIR, Config, update_config_cli
 from briefer.content_view import get_html_part
+
+LOG_FILE = CFG_DIR / Path('briefer.log')
 
 
 def send_mail_local():
@@ -103,6 +107,14 @@ def show_version():
 
 def main():
     """Entry point"""
+
+    # Set up logging. Log file is in the config directory
+    logging.basicConfig(
+        filename=str(LOG_FILE),
+        filemode='w',
+        format='%(asctime)s - %(levelname)s - %(name)s - %(message)s',
+        level=logging.INFO,
+    )
 
     # Parse arguments
     parser = argparse.ArgumentParser()
